@@ -8,8 +8,8 @@ import javafx.scene.control.MenuItem;
 
 public class MenuHandler {
     public final MenuBar bar;
-    private final ReadOnlyObjectWrapper deviceWrapper;
-    public final ReadOnlyObjectProperty deviceProperty;
+    private final ReadOnlyObjectWrapper<Connector> deviceWrapper;
+    public final ReadOnlyObjectProperty<Connector> deviceProperty;
 
     public MenuHandler() {
         var serial = new MenuItem("Serial...");
