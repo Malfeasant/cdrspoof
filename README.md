@@ -1,0 +1,3 @@
+# cdrspoof
+
+Aims to simulate a cash dispenser/recycler's (basic) communications for testing purposes.  Serial or IP.  For now just trying to get a simple (CM18 family) device test to pass- may expand functionality to other devices and more complete simulation (inventory, dispense, deposit, etc...) if there is interest and it's feasible...
