@@ -30,9 +30,7 @@ public class MenuHandler {
         ip.disableProperty().bind(deviceWrapper.isNotNull());
         var disconnect = new MenuItem("Disconnect");
         disconnect.disableProperty().bind(deviceWrapper.isNull());
-        disconnect.setOnAction(e -> {
-            deviceWrapper.set(null);
-        });
+        disconnect.setOnAction(e -> disconnect());
 
         var connect = new Menu("Connect", null, serial, ip, new SeparatorMenuItem(), disconnect);
         bar = new MenuBar(connect);
@@ -41,10 +39,18 @@ public class MenuHandler {
 
     private void showSerialDialog() {
         var availablePorts = SerialPort.getCommPorts();
-        var dialog = new ChoiceDialog<SerialPort>(null, availablePorts);
+        var dialog = new ChoiceDialog<SerialPort>(availablePorts[0], availablePorts);
+        var settings = new SerialSettings();
+        dialog.getDialogPane().setExpandableContent(settings.pane);
+        dialog.setHeaderText("Choose a serial port.\nExpand Details to set baud rate etc.");
         var result = dialog.showAndWait();
         result.ifPresent(r -> {
-            deviceWrapper.set(new Connector.Serial(r));
+            deviceWrapper.set(new Connector.Serial(r, 
+                settings.getBaud(),
+                settings.getStopBits(),
+                settings.getDataBits(),
+                settings.getParity()
+            ));
         });
     }
 
@@ -59,5 +65,11 @@ public class MenuHandler {
             int port = Integer.parseInt(r);
             deviceWrapper.set(new Connector.IP(port));
         });
+    }
+
+    private void disconnect() {
+        deviceWrapper.get().disconnect();
+        // TODO anything else needed to release connection?
+        deviceWrapper.set(null);
     }
 }
