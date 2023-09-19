@@ -1,5 +1,7 @@
 package us.malfeasant.cdrspoof;
 
+import org.tinylog.Logger;
+
 import com.fazecast.jSerialComm.SerialPort;
 
 import javafx.beans.property.ReadOnlyObjectProperty;
@@ -10,6 +12,7 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TextInputDialog;
+import us.malfeasant.cdrspoof.Connector.IP.ConnectorException;
 
 public class MenuHandler {
     private static final int DEFAULTPORT = 9101;
@@ -63,7 +66,11 @@ public class MenuHandler {
             // I don't care yet.  If it does, no new Connection will be created,
             // and I'm ok with that.
             int port = Integer.parseInt(r);
-            deviceWrapper.set(new Connector.IP(port));
+            try {
+                deviceWrapper.set(new Connector.IP(port));
+            } catch (ConnectorException e) {
+                Logger.error("Problem opening socket: {}", e.getCause());
+            }
         });
     }
 
